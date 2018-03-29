@@ -107,3 +107,47 @@ Primary Key 主键就是可以唯一识别的字段，在 Rails 中会默认产�
 - 最常见是自动递增的整数(Auto incrementing Primary Key)，这是 Rails 的默认方式，也是大家熟悉的 ID
 - UUID 通用唯一识别码: 1. 分布式系统喜欢用 2. 或是当作 token URL 功能
 - Natural key (例如身份证号码, ISBN, 国码 ISO ALPHA-2) 等等，不过你需要真的确认不会重复，例如 ISBN 其实会重复的
+
+## Foreign Key (Reference Key) 外键
+所谓的 Foreign Key 是指用来关联一对多的字段字段，例如上述 registrations 表中的 user_id 和 event_id。外键的命名没有特别规定，通常是 _id 结尾。
+
+你不需要特别告诉数据库这个是 foreign key，就可以当他是 foreign key 来使用。
+在 Rails Migration 中可以用 add_foreign_key 语法告诉数据库这个是 foreign key，如此数据库会提供 Referential integrity (Reference constraint) 验证：
+
+确保新增或修改时，要参考的数据存在，不然数据库会报错
+删除资料时，确保没有其他资料参考我，不然数据库会报错_
+
+
+## Joining(关联)
+跨 Tables 进行 Joining 查询，常用的有 Inner Joining 和 Left Outer Joining 两种：
+Inner joining 合并两张 tables，接不起来就不要；
+Outer joining 合并两张 tables，接不起就填 NULL；
+
+
+## Functions
+数据库也有提供一些 Function 可以用在 SQL 里面：
+
+计算 Aggregations
+- 数量
+SELECT COUNT(*) AS event_count FROM events;
+加上 AS 别名才比较好识别处理
+对应的 Rails 语法是 Event.count
+
+- 最小和最大值
+SELECT MIN(capacity) as min_capacity FROM events;
+SELECT MAX(capacity) as max_capacity FROM events;
+对应的 Rails 语法是 Event.minimum(:capacity) 和 Event.maximum(:capacity)
+
+- 总和
+SELECT SUM(capacity) as sum_capacity FROM events;
+对应的 Rails 语法是 Event.sum(:capacity)
+
+- 平均
+SELECT SUM(capacity) / COUNT(capacity) as avg_capacity FROM events;
+或
+SELECT AVG(capacity) as avg_capacity FROM events;
+对应的 Rails 语法是 Event.average(:capacity)
+
+## 分类 GROUP BY
+
+## DISTINCT
